@@ -1,0 +1,46 @@
+"""Exercise 5: Stream Wizard - generators for game event streams."""
+import random
+import typing
+
+PLAYERS: list[str] = ["alice", "bob", "charlie", "dylan"]
+ACTIONS: list[str] = [
+    "run", "eat", "sleep", "grab", "move", "climb", "swim", "use",
+    "release",
+]
+
+
+def gen_event() -> typing.Generator[tuple[str, str], None, None]:
+    """Yield an endless stream of random (player, action) events."""
+    while True:
+        yield (random.choice(PLAYERS), random.choice(ACTIONS))
+
+
+def consume_event(
+    events: list[tuple[str, str]],
+) -> typing.Generator[tuple[str, str], None, None]:
+    """Yield events from the list in random order, removing each one."""
+    while events:
+        item = random.choice(events)
+        events.remove(item)
+        yield item
+
+
+def main() -> None:
+    """Run the data stream demo."""
+    print("=== Game Data Stream Processor ===")
+
+    stream = gen_event()
+    for i in range(1000):
+        name, action = next(stream)
+        print(f"Event {i}: Player {name} did action {action}")
+
+    stream2 = gen_event()
+    event_list: list[tuple[str, str]] = [next(stream2) for _ in range(10)]
+    print(f"Built list of 10 events: {event_list}")
+
+    for event in consume_event(event_list):
+        print(f"Got event from list: {event}")
+        print(f"Remains in list: {event_list}")
+
+
+main()
