@@ -17,28 +17,29 @@ class MazeGenerator:
         }
         visited = [[False for _ in range(self.width)] for _ in range(self.height)]
 
-        def set_42() -> list[tuple[int,int]]:
-            block = []
-            m_w, m_h = self.width // 2, self.height // 2
-            start_w, start_h = (self.width // 2) - 3, (self.height // 2) - 2
-            for i in range(7):
-                if i not in [1, 3]:
-                    block.append((start_w + i, start_h + 0))
-            for i in range(7):
-                if i not in [1, 3, 4, 5]:
-                    block.append((start_w + i, start_h + 1))
-            for i in range(7):
-                if i not in [3]:
-                    block.append((start_w + i, start_h + 2))
-            for i in range(7):
-                if i not in [0, 1, 3, 5, 6]:
-                    block.append((start_w + i, start_h + 3))
-            for i in range(7):
-                if i not in [0, 1, 3]:
-                    block.append((start_w + i, start_h + 4))
 
+        def set_42() -> list[tuple[int,int]]:
+            x = self.width #largura(linha)
+            y = self.height #Altura(coluna)
+            block = []
+            if x % 2:
+                f_x, t_x = (x // 2) - 3, (x // 2) + 1
+            else:
+                f_x, t_x = (x // 2) - 4, (x // 2) + 1
+            if y % 2:
+                f_y, t_y = (y // 2) - 2, (y // 2) - 2
+            else:
+                f_y, t_y = (y // 2) - 3, (y // 2) - 2
+            for i in range(5):
+                if i <= 2: block.append((f_x + 0, f_y + i))
+                if i == 2: block.append((f_x + 1, f_y + i))
+                block.append((f_x + 2, f_y + i))
+            for i in range(5):
+                if i != 1: block.append((t_x + 0, t_y + i))
+                if i not in [1, 3]: block.append((t_x + 1, t_y + i))
+                if i != 3: block.append((t_x + 2, t_y + i))
             return block
-        
+
         def get_neighbors(x: int, y: int) -> List[Tuple[int, int, str, str]]:
             neighbors = []
             directions = [(0, -1, "N", "S"), (0, 1, "S", "N"), (-1, 0, "W", "E"), (1, 0, "E", "W")]
@@ -52,10 +53,10 @@ class MazeGenerator:
         visited[start_y][start_x] = True
         stack = [(start_x, start_y)]
 
-        block = set_42()
-        for bx, by in block:
-            visited[by][bx] = True
-
+        if self.width >= 9 and self.height >= 7:
+            block = set_42()
+            for bx, by in block:
+                visited[by][bx] = True
 
         while stack:
             cx, cy = stack[-1]
@@ -83,17 +84,30 @@ class MazeGenerator:
         return self.cells
 
     def _criar_loops_pacman(self) -> None:
-        tentativas = (self.width * self.height) // 5
+        tentativas = (self.width * self.height) // 1
         for _ in range(tentativas):
             rx = random.randint(0, self.width - 2)
             ry = random.randint(0, self.height - 2)
             direcao = random.choice(["E", "S"])
-            if direcao == "E" and rx + 1 < self.width:
-                self.cells[(rx, ry)]["E"] = False
-                self.cells[(rx + 1, ry)]["W"] = False
-            elif direcao == "S" and ry + 1 < self.height:
-                self.cells[(rx, ry)]["S"] = False
-                self.cells[(rx, ry + 1)]["N"] = False
+            cell = self.cells[rx, ry]
+            block = (cell == {"N": True, "S": True, "E": True, "W": True})
+            block_e = False
+            if rx + 1 < self.width:
+                cell_e = self.cells[rx + 1, ry]
+                block_e = (cell_e == {"N": True, "S": True, "E": True, "W": True})
+            block_s = False
+            if ry + 1 < self.height:
+                cell_s = self.cells[rx, ry + 1]
+                block_s = (cell_s == {"N": True, "S": True, "E": True, "W": True})
+            if not block:
+                if not block_e:
+                    if direcao == "E" and rx + 1 < self.width:
+                        self.cells[(rx, ry)]["E"] = False
+                        self.cells[(rx + 1, ry)]["W"] = False
+                elif not block_s:
+                    if direcao == "S" and ry + 1 < self.height:
+                        self.cells[(rx, ry)]["S"] = False
+                        self.cells[(rx, ry + 1)]["N"] = False
 
 
 class MazeVisualizer:
@@ -137,10 +151,10 @@ class MazeVisualizer:
             
             if (x, y) == self.config.entry:
                 self.canvas.create_rectangle(x1+2, y1+2, x2-2, y2-2, fill="#00FF00", outline="")
-            elif (x, y) == self.config.exit_cell:
+            if (x, y) == self.config.exit_cell:
                 self.canvas.create_rectangle(x1+2, y1+2, x2-2, y2-2, fill="#FFCC00", outline="")
             if all(walls[i] for i in ["N", "S", "E", "W"]):
-                self.canvas.create_rectangle(x1+2, y1+2, x2-2, y2-2, fill="#E21313", outline="")
+                self.canvas.create_rectangle(x1, y1, x2, y2, fill="#1900FF", outline="")
             if walls["N"]: self.canvas.create_line(x1, y1, x2, y1, fill=color, width=2)
             if walls["S"]: self.canvas.create_line(x1, y2, x2, y2, fill=color, width=2)
             if walls["E"]: self.canvas.create_line(x2, y1, x2, y2, fill=color, width=2)

@@ -37,6 +37,28 @@ def parse_config(filename: str) -> MazeConfig:
         sys.exit(1)
     return config
 
+def check_config(config: MazeConfig) -> None:
+    if config.width < 0 or config.height < 0:
+        print("Lagura ou altura negativas!")
+        sys.exit(1)
+    entry: bool = True
+    exit: bool = True
+    x, y = config.entry
+    if x < 0 or y < 0 or x >= config.width or y >= config.height: entry = False
+    x, y = config.exit_cell
+    if x < 0 or y < 0 or x >= config.width or y >= config.height: exit = False
+    if not entry and not exit:
+        print("Entrada e saida fora do labirinto!")
+        sys.exit(1)
+    elif not entry:
+        print("Entrada fora do labirinto!")
+        sys.exit(1)
+    elif not exit:
+        print("Saida fora do labirinto!")
+        sys.exit(1)
+    if config.entry == config.exit_cell:
+        print("Entrada e saida no mesmo lugar!")
+        sys.exit(1)
 
 def export_maze(cells: dict, config: MazeConfig) -> None:
     try:

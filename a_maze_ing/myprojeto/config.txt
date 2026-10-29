@@ -1,7 +1,7 @@
 #Arquivo de configuracao do labirinto
-WIDTH=31
+WIDTH=30
 HEIGHT=31
 ENTRY=0,0
-EXIT=8,8
+EXIT=29,29
 OUTPUT_FILE=maze.txt
-PERFECT=True
+PERFECT=False

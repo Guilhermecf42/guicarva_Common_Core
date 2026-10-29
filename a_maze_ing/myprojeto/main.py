@@ -1,6 +1,6 @@
 import sys
 from a_maze_ing import MazeVisualizer
-from parse_config import parse_config
+from parse_config import parse_config, check_config
 
 def main() -> None:
     if len(sys.argv) != 2:
@@ -8,6 +8,8 @@ def main() -> None:
         sys.exit(1)
 
     config = parse_config(sys.argv[1])
+    check_config(config)
+
 
     visualizer = MazeVisualizer(config)
     visualizer.run()
