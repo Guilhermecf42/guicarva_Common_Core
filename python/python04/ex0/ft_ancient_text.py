@@ -1,10 +1,8 @@
-"""Exercise 0: Ancient Text Recovery - read and display a file."""
 import sys
 import typing
 
 
 def main() -> None:
-    """Read the file given on the command line and display it."""
     if len(sys.argv) != 2:
         print(f"Usage: {sys.argv[0]} <file>")
         return
