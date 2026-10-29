@@ -1,4 +1,3 @@
-"""Exercise 6: Data Alchemist - list and dict comprehensions."""
 import random
 
 INITIAL_PLAYERS: list[str] = [
@@ -8,7 +7,6 @@ INITIAL_PLAYERS: list[str] = [
 
 
 def main() -> None:
-    """Demonstrate list and dict comprehensions on player data."""
     print("=== Game Data Alchemist ===")
     print()
 

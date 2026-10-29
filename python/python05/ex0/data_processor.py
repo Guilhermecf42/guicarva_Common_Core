@@ -1,10 +1,8 @@
-"""Exercise 0: abstract data processors sharing a common interface."""
 import abc
 import typing
 
 
 class DataProcessor(abc.ABC):
-    """Common interface for every kind of data processor."""
 
     def __init__(self, name: str) -> None:
         """Create a processor with an empty internal buffer."""
@@ -37,10 +35,8 @@ class DataProcessor(abc.ABC):
 
 
 class NumericProcessor(DataProcessor):
-    """Processor handling ints, floats and sequences of both."""
 
     def __init__(self) -> None:
-        """Create the numeric processor."""
         super().__init__("Numeric Processor")
 
     def validate(self, data: typing.Any) -> bool:
@@ -72,14 +68,11 @@ class NumericProcessor(DataProcessor):
 
 
 class TextProcessor(DataProcessor):
-    """Processor handling strings and lists of strings."""
 
     def __init__(self) -> None:
-        """Create the text processor."""
         super().__init__("Text Processor")
 
     def validate(self, data: typing.Any) -> bool:
-        """Return True for a string or a list of strings."""
         if isinstance(data, str):
             return True
         if isinstance(data, list) and data:
@@ -90,7 +83,6 @@ class TextProcessor(DataProcessor):
         return False
 
     def ingest(self, data: str | list[str]) -> None:
-        """Store the given strings."""
         if not self.validate(data):
             raise ValueError("Improper text data")
         if isinstance(data, str):
@@ -101,14 +93,11 @@ class TextProcessor(DataProcessor):
 
 
 class LogProcessor(DataProcessor):
-    """Processor handling log dictionaries and lists of them."""
 
     def __init__(self) -> None:
-        """Create the log processor."""
         super().__init__("Log Processor")
 
     def is_log(self, data: typing.Any) -> bool:
-        """Return True if data is a dict of string key-value pairs."""
         if not isinstance(data, dict) or not data:
             return False
         for key, value in data.items():
@@ -117,7 +106,6 @@ class LogProcessor(DataProcessor):
         return True
 
     def validate(self, data: typing.Any) -> bool:
-        """Return True for a log dict or a list of log dicts."""
         if self.is_log(data):
             return True
         if isinstance(data, list) and data:
@@ -128,13 +116,11 @@ class LogProcessor(DataProcessor):
         return False
 
     def convert(self, entry: dict[str, str]) -> str:
-        """Turn a log dict into a single readable string."""
         return ": ".join(entry.values())
 
     def ingest(
         self, data: dict[str, str] | list[dict[str, str]]
     ) -> None:
-        """Convert log entries into strings and store them."""
         if not self.validate(data):
             raise ValueError("Improper log data")
         if isinstance(data, dict):
@@ -145,7 +131,6 @@ class LogProcessor(DataProcessor):
 
 
 def main() -> None:
-    """Test the three specialized processors."""
     print("=== Code Nexus - Data Processor ===")
 
     numeric = NumericProcessor()

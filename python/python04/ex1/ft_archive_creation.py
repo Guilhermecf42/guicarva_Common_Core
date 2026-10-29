@@ -1,10 +1,8 @@
-"""Exercise 1: Archive Creation - read, transform and save a file."""
 import sys
 import typing
 
 
 def read_archive(filename: str) -> str:
-    """Read and display the file content, return it as a string."""
     print(f"Accessing file '{filename}'")
 
     file: typing.IO[str]
@@ -29,7 +27,6 @@ def read_archive(filename: str) -> str:
 
 
 def transform(content: str) -> str:
-    """Add a '#' at the end of each line."""
     new_content = ""
     for line in content.splitlines():
         new_content += line + "#\n"
@@ -37,7 +34,6 @@ def transform(content: str) -> str:
 
 
 def save_archive(filename: str, content: str) -> None:
-    """Write the content to the given file."""
     print(f"Saving data to '{filename}'")
 
     file: typing.IO[str]
@@ -59,7 +55,6 @@ def save_archive(filename: str, content: str) -> None:
 
 
 def main() -> None:
-    """Recover a file, transform it and optionally save the result."""
     if len(sys.argv) != 2:
         print(f"Usage: {sys.argv[0]} <file>")
         return
