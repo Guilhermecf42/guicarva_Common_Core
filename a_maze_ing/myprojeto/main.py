@@ -10,7 +10,7 @@ def main() -> None:
     config = parse_config(sys.argv[1])
 
     visualizer = MazeVisualizer(config)
-    visualizer.run()
+    visualizer.make()
 
 if __name__ == "__main__":
     main()
